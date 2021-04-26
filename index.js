@@ -34,10 +34,9 @@ client.on('ready', () => {
 
 client.on('message', async (msg) => {
 	const user = await msg.getContact()
-	console.log(user)
-	console.log(user.id)
-	console.log(user.id.user)
 	const texto = msg.body.toLowerCase()
+	const chat = await msg.getChat()
+
 	if(texto.includes('linux') ) {
 		msg.reply("I use Arch btw")
 	}
@@ -57,7 +56,6 @@ client.on('message', async (msg) => {
 			msg.reply('pong')
 		}
 	}
-	
 	if(matchesPong){
 		cantidad = matchesPong.length
 		if(cantidad > 1){
@@ -72,7 +70,7 @@ client.on('message', async (msg) => {
 	}
 
 
-	if(texto.includes('!kill') || texto.includes('/kill')) {
+	if(texto.startsWith('!kill') || texto.startsWith('/kill')) {
 		const deathMessages = [
 			"was pricked to death", 
 			"drowned",
@@ -94,11 +92,22 @@ client.on('message', async (msg) => {
 			"discovered the floor was lava",
 			"was killed by magic",
 		]
+		args = texto.split(" ")
+		console.log(args)
+		mencionoAAlguien = (args.length>1)?args[1].startsWith('@'):false;
 
-		chat = await msg.getChat()
-		chat.sendMessage(`@${user.id.user} ${deathMessages[parseInt(Math.random()*deathMessages.length)]}`, {
+		if(!mencionoAAlguien) chat.sendMessage(`@${user.id.user} ${deathMessages[parseInt(Math.random()*deathMessages.length)]}`, {
 			mentions: [user]
 		})
+		else {
+			const mentions = await msg.getMentions();
+			const mention = mentions[0];
+			console.log(mention)
+			chat.sendMessage(`@${mention.id.user} ${deathMessages[parseInt(Math.random()*deathMessages.length)]}`, {
+			mentions: [mention]
+		})
+
+		}
 	}
 
 	console.log(user.name || user.pushname, ": ", msg.body);
