@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { Client } = require("whatsapp-web.js");
+const { Client, MessageMedia } = require("whatsapp-web.js");
 const qrcode = require('qrcode-terminal');
 
 const onMessage = require('./onMessage');
@@ -36,5 +36,15 @@ client.on('ready', () => {
 
 
 client.on('message', onMessage);
+
+client.on('group_join', async gn => {
+	console.log(gn)
+	const chat = await client.getChatById(gn.id.remote)
+	console.log(chat)
+	const stickerBienvenido = MessageMedia.fromFilePath('./bienvenido.webp')
+	chat.sendMessage(stickerBienvenido, {
+		sendMediaAsSticker: true
+	})
+})
 
 client.initialize();
