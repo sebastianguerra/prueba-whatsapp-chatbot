@@ -37,6 +37,15 @@ client.on('message', async (msg) => {
 	const texto = msg.body.toLowerCase()
 	const chat = await msg.getChat()
 
+	if(texto.includes('!sticker')||texto.includes('!stiker')){
+		if(msg.hasMedia){
+			let media = await msg.downloadMedia()
+			chat.sendMessage(media, {
+				sendMediaAsSticker: true
+			})
+		}
+	}
+
 	if(texto.includes('linux') ) {
 		msg.reply("I use Arch btw")
 	}
@@ -94,7 +103,7 @@ client.on('message', async (msg) => {
 		]
 		args = texto.split(" ")
 		console.log(args)
-		mencionoAAlguien = (args.length>1)?args[1].startsWith('@'):false;
+		mencionoAAlguien = (args.length>1) ? args[1].startsWith('@') : false;
 
 		if(!mencionoAAlguien) chat.sendMessage(`@${user.id.user} ${deathMessages[parseInt(Math.random()*deathMessages.length)]}`, {
 			mentions: [user]
