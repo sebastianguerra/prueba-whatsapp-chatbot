@@ -3,57 +3,15 @@ module.exports = async function  (msg) {
 	const texto = msg.body.toLowerCase()
 	const chat = await msg.getChat()
 
+	if(texto == 'a') {
+		msg.reply('a')
+	}
+
 	if(texto.startsWith('!help') || texto.startsWith('!h')) {
 		msg.reply(
 			`!ping -> si el bot esta funcionando responde con 'pong'
 Foto + '!sticker' -> envia un sticker creado con la foto`)
 	}
-
-	if(texto.includes('!sticker')||texto.includes('!stiker')){
-		if(msg.hasMedia){
-			let media = await msg.downloadMedia()
-			chat.sendMessage(media, {
-				sendMediaAsSticker: true
-			})
-		}
-	}
-
-	if(texto == 'a') {
-		msg.reply('a')
-	}
-
-	if(texto.includes('linux') ) {
-		msg.reply("I use Arch btw")
-	}
-
-	let matchesPing = texto.match(/!ping/g)
-	let matchesPong = texto.match(/!pong/g)
-	if(matchesPing )
-	if(matchesPing){
-		cantidad = matchesPing.length
-		if(cantidad > 1){
-			let res = ''
-			for(let i = 0; i <= cantidad; i++) {
-				res += 'pong '
-			}
-			msg.reply(res+'gane;)')
-		} else {
-			msg.reply('pong')
-		}
-	}
-	if(matchesPong){
-		cantidad = matchesPong.length
-		if(cantidad > 1){
-			let res = ''
-			for(let i = 0; i <= cantidad; i++) {
-				res += 'ping '
-			}
-			msg.reply(res+'gane;)')
-		} else {
-			msg.reply('ping')
-		}
-	}
-
 
 	if(texto.startsWith('!kill') || texto.startsWith('/kill')) {
 		const deathMessages = [
@@ -94,6 +52,55 @@ Foto + '!sticker' -> envia un sticker creado con la foto`)
 
 		}
 	}
+
+	if(texto.includes('!sticker')||texto.includes('!stiker')){
+		if(msg.hasMedia){
+			let media = await msg.downloadMedia()
+			chat.sendMessage(media, {
+				sendMediaAsSticker: true
+			})
+		}
+	}
+
+	if(texto.includes('linux') ) {
+		msg.reply("I use Arch btw")
+	}
+
+	let matchesPing = texto.match(/!ping/g)
+	let matchesPong = texto.match(/!pong/g)
+	if(matchesPing && matchesPong) {
+        msg.reply(texto
+            .replace(/!ping/g, "ahjiuregr8734hkljbval298hahlhg")
+            .replace(/!pong/g, "ping")
+            .replace(/ahjiuregr8734hkljbval298hahlhg/g, "pong")
+        )
+    } else{
+        if(matchesPing){
+            cantidad = matchesPing.length
+            if(cantidad > 1){
+                let res = ''
+                for(let i = 0; i <= cantidad; i++) {
+                    res += 'pong '
+                }
+                msg.reply(res+'gane;)')
+            } else {
+                msg.reply('pong')
+            }
+        }
+        if(matchesPong){
+            cantidad = matchesPong.length
+            if(cantidad > 1){
+                let res = ''
+                for(let i = 0; i <= cantidad; i++) {
+                    res += 'ping '
+                }
+                msg.reply(res+'gane;)')
+            } else {
+                msg.reply('ping')
+            }
+        }
+    }
+
 
 	console.log(user.name || user.pushname, ": ", msg.body);
 }
