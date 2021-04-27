@@ -26,13 +26,15 @@ Foto + '!sticker' -> envia un sticker creado con la foto`)
 		args = texto.split(" ")
 		mencionoAAlguien = (args.length>1) ? mentions.length > 0 : false;
 
-		if(!mencionoAAlguien) chat.sendMessage(`@${user.id.user} ${noFightDeathMessages[parseInt(Math.random()*noFightDeathMessages.length)]}`, {
-			mentions: [user]
-		})
+		if(!mencionoAAlguien) 
+			chat.sendMessage(noFightDeathMessages[parseInt(Math.random()*noFightDeathMessages.length)]
+				.replace(/%1\$s/g, `@${user.id.user}`), {
+				mentions: [user]
+			})
 		else {
 			const mention = mentions[0];
 			chat.sendMessage(noFightDeathMessages[parseInt(Math.random()*noFightDeathMessages.length)]
-				.replace(/%1\$s/g, `@${user.id.user}`), 
+				.replace(/%1\$s/g, `@${mention.id.user}`), 
 				{mentions: [mention]}
 			)
 
@@ -48,6 +50,15 @@ Foto + '!sticker' -> envia un sticker creado con la foto`)
 			chat.sendMessage(media, {
 				sendMediaAsSticker: true
 			})
+		}else if(msg.hasQuotedMsg) {
+			let quotedMsg = await msg.getQuotedMessage();
+			console.log("here")
+			if(quotedMsg.hasMedia){
+				let media = await quotedMsg.downloadMedia()
+				chat.sendMessage(media, {
+					sendMediaAsSticker: true
+				})
+			}
 		}
 	}
 
