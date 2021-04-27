@@ -1,4 +1,7 @@
 const { evaluate } = require('mathjs');
+const deathMessages = require('./deathMessages.json');
+const fight = require('./fight');
+
 module.exports = async function  (msg) {
     const user = await msg.getContact()
 	const texto = msg.body.toLowerCase()
@@ -18,43 +21,26 @@ Foto + '!sticker' -> envia un sticker creado con la foto`)
 
     // Usa msg, user y chat
 	if(texto.startsWith('!kill') || texto.startsWith('/kill')) {
-		const deathMessages = [
-			"was pricked to death", 
-			"drowned",
-			"experienced kinetic energy",
-			"blew up",
-			"hit the ground too hard",
-			"fell from a high place",
-			"fell off a ladder",
-			"fell off some vines",
-			"fell off some weeping vines",
-			"fell off scaffolding",
-			"fell while climbing",
-			"was squashed b a falling anvil",
-			"was squashed by a falling block",
-			"went up in flames",
-			"burned to death",
-			"tried to swim in lava",
-			"was struck by lightning",
-			"discovered the floor was lava",
-			"was killed by magic",
-		]
+		const noFightDeathMessages = deathMessages.deathMessages;
 		const mentions = await msg.getMentions();
 		args = texto.split(" ")
 		mencionoAAlguien = (args.length>1) ? mentions.length > 0 : false;
 
-		if(!mencionoAAlguien) chat.sendMessage(`@${user.id.user} ${deathMessages[parseInt(Math.random()*deathMessages.length)]}`, {
+		if(!mencionoAAlguien) chat.sendMessage(`@${user.id.user} ${noFightDeathMessages[parseInt(Math.random()*noFightDeathMessages.length)]}`, {
 			mentions: [user]
 		})
 		else {
 			const mention = mentions[0];
 			console.log(mention)
-			chat.sendMessage(`@${mention.id.user} ${deathMessages[parseInt(Math.random()*deathMessages.length)]}`, {
-			mentions: [mention]
-		})
+			chat.sendMessage(noFightDeathMessages[parseInt(Math.random()*noFightDeathMessages.length)]
+				.replace(/%1\$s/g, `@${user.id.user}`), 
+				{mentions: [mention]}
+			)
 
 		}
 	}
+
+	if(fight.wantsToFight(texto)) fight.fight(texto, msg, chat, user)
 
     // Usa msg y chat
 	if(texto.includes('!sticker')||texto.includes('!stiker')){
