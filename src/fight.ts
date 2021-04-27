@@ -1,13 +1,14 @@
-const deathMessages = require('./deathMessages.json')
-module.exports = {
-    wantsToFight: (texto)=>{
+import WAWebJS from 'whatsapp-web.js';
+import deathMessages from './public/deathMessages.json'
+export default {
+    wantsToFight: (texto: string)=>{
         return texto.startsWith('!fight') || texto.startsWith('/fight') || texto.startsWith('!dueloamuerteconcuchillos')
     },
-    fight: async (texto, msg, chat, user) => {
+    fight: async (texto: string, msg: WAWebJS.Message, chat: WAWebJS.Chat, user: WAWebJS.Contact) => {
 		const fightDeathMessages = deathMessages.fightDeathMessages;
 		const mentions = await msg.getMentions();
-		args = texto.split(" ")
-		mencionoAAlguien = (args.length>1) ? mentions.length > 0 : false;
+		let args = texto.split(" ")
+		let mencionoAAlguien = (args.length>1) ? mentions.length > 0 : false;
 
 		if(!mencionoAAlguien) chat.sendMessage(`@${user.id.user} debes mencionar a alguien para luchar!`, {
 			mentions: [user]
@@ -22,7 +23,7 @@ module.exports = {
             }
 
 			chat.sendMessage(
-                fightDeathMessages[parseInt(Math.random()*fightDeathMessages.length)]
+                fightDeathMessages[Math.floor(Math.random()*fightDeathMessages.length)]
                     .replace(/%1\$s/g, `@${fighter1.id.user}`)
                     .replace(/%2\$s/g, `@${fighter2.id.user}`), 
                 {mentions: [fighter1, fighter2]}

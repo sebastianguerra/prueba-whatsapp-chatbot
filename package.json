@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node dist/index.js || (tsc && node dist/index.js)",
+    "build": "tsc",
+    "run": "tsc && node dist/index.js",
+    "clearAll": "rm -rf dist/ node_modules/ package-lock.json "
   },
   "author": "",
   "license": "ISC",
@@ -13,5 +16,9 @@
     "mathjs": "^9.3.2",
     "qrcode-terminal": "^0.12.0",
     "whatsapp-web.js": "^1.12.6"
+  },
+  "devDependencies": {
+    "@types/mathjs": "^6.0.11",
+    "typescript": "^4.2.4"
   }
 }
