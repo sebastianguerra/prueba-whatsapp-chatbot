@@ -15,7 +15,8 @@ if(fs.existsSync(SESSION_FILE_PATH)) {
 
 // Use the saved values
 const client = new Client({
-	session: sessionData
+	session: sessionData,
+	puppeteer: '/usr/bin/google-chrome-stable'
 });
 
 client.on('authenticated', (session) => {
