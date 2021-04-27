@@ -14,7 +14,6 @@ module.exports = {
 		})
 		else {
 			const mention = mentions[0];
-			console.log('Fight', mention)
 
             let fighter1 = mention, fighter2 = user;
             if(Math.random()>0.5){

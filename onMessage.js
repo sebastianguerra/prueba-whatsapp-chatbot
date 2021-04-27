@@ -31,7 +31,6 @@ Foto + '!sticker' -> envia un sticker creado con la foto`)
 		})
 		else {
 			const mention = mentions[0];
-			console.log(mention)
 			chat.sendMessage(noFightDeathMessages[parseInt(Math.random()*noFightDeathMessages.length)]
 				.replace(/%1\$s/g, `@${user.id.user}`), 
 				{mentions: [mention]}
@@ -60,7 +59,6 @@ Foto + '!sticker' -> envia un sticker creado con la foto`)
 		catch {
 			response = "No pude resolverlo:( perdoname la vida:c"
 		}
-		console.log(response)
 		msg.reply(response)
 	}
 

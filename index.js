@@ -39,7 +39,6 @@ client.on('ready', () => {
 client.on('message', onMessage);
 
 client.on('group_join', async gn => {
-	console.log(gn)
 	const chat = await client.getChatById(gn.id.remote)
 	console.log(chat)
 	const stickerBienvenido = MessageMedia.fromFilePath('./bienvenido.webp')
