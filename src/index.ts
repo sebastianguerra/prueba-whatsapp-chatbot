@@ -4,35 +4,22 @@ import qrcode from 'qrcode-terminal';
 
 import onMessage from './onMessage';
 
-const SESSION_FILE_PATH = '../session.json';
-let sessionData;
-import('../session.json').then(data => {
-	sessionData = data;
-	console.log('found: data:', data);
-})
+const SESSION_FILE_PATH = __dirname+'/public/session.json';
+let sessionData: WAWebJS.ClientSession;
+if(fs.existsSync(SESSION_FILE_PATH)){
+	sessionData = JSON.parse(fs.readFileSync(SESSION_FILE_PATH).toString());
+}else{
+	console.log("Debes crear la sesion primero!\nEjecuta 'npm run getSession'");
+	process.exit();
+}
 
 // Use the saved values
 const client: WAWebJS.Client = new Client({
-	session: {
-		WABrowserId: '"qTggryfZdiGVZT3avEPAmA=="',
-		WASecretBundle: '{"key":"ByHCWCHmp7RWVz5Eue0cx7hm7La+8HT9dZSgjrmnD48=","encKey":"dwhF3pjsw2L1nG7v77r0pkfd/eGCW1ueUV+W2BwpXsc=","macKey":"ByHCWCHmp7RWVz5Eue0cx7hm7La+8HT9dZSgjrmnD48="}',
-		WAToken1: '"SxshOF9BzlVXJfBYVnEDFhKpBEbHevEt1woCJl8AXtg="',
-		WAToken2: '"1@7101/gzUUmdyVdrWg9Jf669qceTdJVGSMn4xo/oZgoiioSVFI+qTbeRSs3cfMKJ4LlxKQnhXa99cIg=="'
-	  },
+	session: sessionData,
 	puppeteer: '/usr/bin/google-chrome-stable'
 });
 
-client.on('authenticated', (session) => {
-	console.log(session)
-	fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), function(err) {
-		if(err) {console.error(err);}
-	})
-});
 
-client.on('qr', (qr) => {
-	// Generate and scan this code with your phone
-	qrcode.generate(qr, {small:true});
-});
 
 client.on('ready', () => {
 	console.log('Client is ready!');
