@@ -27,7 +27,7 @@ client.on('ready', () => {
 });
 
 
-client.on('message', onMessage);
+client.on('message', onMessage(client));
 
 client.on('group_join', async gn => {
 	const groupNotificationId: object = gn.id;
