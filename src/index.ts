@@ -38,6 +38,17 @@ client.on('group_join', async gn => {
 	chat.sendMessage(stickerBienvenido, {
 		sendMediaAsSticker: true
 	})
-})
+});
+
+client.on('group_leave', async gn => {
+	const groupNotificationId: object = gn.id;
+	const groupChatId: {remote: string} = {...{remote:''}, ...groupNotificationId};
+	const chat: WAWebJS.Chat = await client.getChatById(groupChatId.remote);
+	console.log(chat)
+	const stickerChao: MessageMedia = MessageMedia.fromFilePath(path.resolve('media', 'chao.webp'));
+	chat.sendMessage(stickerChao, {
+		sendMediaAsSticker: true
+	})
+});
 
 client.initialize();
