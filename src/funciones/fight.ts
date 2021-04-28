@@ -1,7 +1,7 @@
 import WAWebJS from 'whatsapp-web.js';
-import deathMessages from './public/deathMessages.json'
+import deathMessages from '../public/deathMessages.json'
 export default {
-    wantsToFight: (texto: string)=>{
+    wantsToFight: (texto: string):boolean=>{
         return texto.startsWith('!fight') || texto.startsWith('/fight') || texto.startsWith('!dueloamuerteconcuchillos')
     },
     fight: async (texto: string, msg: WAWebJS.Message, chat: WAWebJS.Chat, user: WAWebJS.Contact) => {

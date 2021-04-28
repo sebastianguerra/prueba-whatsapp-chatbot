@@ -1,7 +1,9 @@
 import { evaluate } from 'mathjs';
-import deathMessages from './public/deathMessages.json';
-import fight from './fight';
 import WAWebJS from 'whatsapp-web.js';
+import deathMessages from './public/deathMessages.json';
+
+import fight from './funciones/fight';
+import getStickers from './funciones/stickers';
 
 export default async function  (msg: WAWebJS.Message) {
     const user: WAWebJS.Contact = await msg.getContact()
@@ -14,7 +16,7 @@ export default async function  (msg: WAWebJS.Message) {
 	}
 
     // Usa msg
-	if(texto.startsWith('!help') || texto.startsWith('!h')) {
+	if(texto.startsWith('!help')) {
 		msg.reply(
 			`!ping -> si el bot esta funcionando responde con 'pong'
 Foto + '!sticker' -> envia un sticker creado con la foto`)
@@ -45,26 +47,8 @@ Foto + '!sticker' -> envia un sticker creado con la foto`)
 	if(fight.wantsToFight(texto)) fight.fight(texto, msg, chat, user)
 
     // Usa msg y chat
-	if(texto.includes('!sticker')||texto.includes('!stiker')){
-		if(msg.hasMedia){
-			console.log("Tiene media")
-			let media: WAWebJS.MessageMedia = await msg.downloadMedia();
-			chat.sendMessage(media, {
-				sendMediaAsSticker: true
-			});
-		}else if(msg.hasQuotedMsg) {
-			console.log("Tiene mensaje citado");
-			let quotedMsg: WAWebJS.Message = await msg.getQuotedMessage();
-			console.log(quotedMsg);
-			if(quotedMsg.hasMedia){
-				console.log("Mensaje citado tiene media");
-				let media:WAWebJS.MessageMedia = await quotedMsg.downloadMedia()
-				chat.sendMessage(media, {
-					sendMediaAsSticker: true
-				})
-			}
-		}
-	}
+	if(texto.includes('!sticker')||texto.includes('!stiker'))
+		getStickers(msg, chat);
 
 	if(texto.startsWith('!eval')) {
 		let response: string;
