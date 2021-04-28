@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "mathjs": "^9.3.2",
+    "path": "^0.12.7",
     "qrcode-terminal": "^0.12.0",
     "whatsapp-web.js": "^1.12.6"
   },

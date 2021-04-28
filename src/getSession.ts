@@ -1,6 +1,7 @@
 import fs from "fs";
 import { Client } from "whatsapp-web.js";
 import qrcode from 'qrcode-terminal';
+import path from "path";
 
 const client: Client = new Client({});
 
@@ -9,7 +10,7 @@ client.on('qr', (qr) => {
 	qrcode.generate(qr, {small:true});
 });
 
-const SESSION_FILE_PATH = __dirname+'/public/session.json';
+const SESSION_FILE_PATH = path.resolve(__dirname, 'public', 'session.json');
 client.on('authenticated', (session) => {
 	console.log(session);
     if(!fs.existsSync(SESSION_FILE_PATH))

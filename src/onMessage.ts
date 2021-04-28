@@ -83,8 +83,8 @@ Foto + '!sticker' -> envia un sticker creado con la foto`)
 	}
 
     // Usa msg
-	let matchesPing:RegExpMatchArray = texto.match(/!ping/g)
-	let matchesPong:RegExpMatchArray = texto.match(/!pong/g)
+	let matchesPing:RegExpMatchArray|null = texto.match(/!ping/g);
+	let matchesPong:RegExpMatchArray|null = texto.match(/!pong/g);
 	if(matchesPing && matchesPong) {
         msg.reply(texto
             .replace(/!ping/g, "ahjiuregr8734hkljbval298hahlhg")

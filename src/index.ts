@@ -1,10 +1,11 @@
 import fs from "fs";
 import WAWebJS, { Client, MessageMedia } from "whatsapp-web.js";
-import qrcode from 'qrcode-terminal';
+import path from "path";
 
 import onMessage from './onMessage';
 
-const SESSION_FILE_PATH = __dirname+'/public/session.json';
+const SESSION_FILE_PATH = path.resolve('dist', 'public', 'session.json');
+console.log(SESSION_FILE_PATH)
 let sessionData: WAWebJS.ClientSession;
 if(fs.existsSync(SESSION_FILE_PATH)){
 	sessionData = JSON.parse(fs.readFileSync(SESSION_FILE_PATH).toString());
@@ -29,12 +30,11 @@ client.on('ready', () => {
 client.on('message', onMessage);
 
 client.on('group_join', async gn => {
-	// gn.id.remote
 	const groupNotificationId: object = gn.id;
 	const groupChatId: {remote: string} = {...{remote:''}, ...groupNotificationId};
 	const chat: WAWebJS.Chat = await client.getChatById(groupChatId.remote);
 	console.log(chat)
-	const stickerBienvenido: MessageMedia = MessageMedia.fromFilePath('./public/bienvenido.webp')
+	const stickerBienvenido: MessageMedia = MessageMedia.fromFilePath(path.resolve('media', 'bienvenido.webp'));
 	chat.sendMessage(stickerBienvenido, {
 		sendMediaAsSticker: true
 	})
