@@ -50,7 +50,7 @@ const comandos: {[id: string]:  (msg:WAWebJS.Message)=>void} = {
 	},
 	//"/fight":
 	//"!dueloamuerteconcuchillos":
-	"!fight": fight.fight
+	"!fight": fight
 };
 
 
