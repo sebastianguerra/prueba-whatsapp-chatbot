@@ -1,6 +1,7 @@
-import WAWebJS from "whatsapp-web.js";
+import WAWebJS from 'whatsapp-web.js';
 
-export default async (msg: WAWebJS.Message, chat: WAWebJS.Chat) => {
+export default async (msg: WAWebJS.Message) => {
+    const chat: WAWebJS.Chat = await msg.getChat()
     if(msg.hasMedia){
         console.log("Tiene media")
         let media: WAWebJS.MessageMedia = await msg.downloadMedia();
@@ -23,4 +24,4 @@ export default async (msg: WAWebJS.Message, chat: WAWebJS.Chat) => {
             }
         }
     }
-};
+}
