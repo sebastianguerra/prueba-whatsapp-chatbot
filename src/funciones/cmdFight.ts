@@ -4,10 +4,12 @@ export default {
     wantsToFight: (texto: string):boolean=>{
         return texto.startsWith('!fight') || texto.startsWith('/fight') || texto.startsWith('!dueloamuerteconcuchillos')
     },
-    fight: async (texto: string, msg: WAWebJS.Message, chat: WAWebJS.Chat, user: WAWebJS.Contact) => {
+    fight: async (msg: WAWebJS.Message) => {
+        const chat: WAWebJS.Chat = await msg.getChat();
+		const user: WAWebJS.Contact = await msg.getContact();
 		const fightDeathMessages = deathMessages.fightDeathMessages;
 		const mentions = await msg.getMentions();
-		let args = texto.split(" ")
+		let args = msg.body.toLowerCase().split(" ")
 		let mencionoAAlguien = (args.length>1) ? mentions.length > 0 : false;
 
 		if(!mencionoAAlguien) chat.sendMessage(`@${user.id.user} debes mencionar a alguien para luchar!`, {

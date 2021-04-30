@@ -2,73 +2,68 @@ import { evaluate } from 'mathjs';
 import WAWebJS, {Client} from 'whatsapp-web.js';
 import deathMessages from './public/deathMessages.json';
 
-import fight from './funciones/fight';
-import getStickers from './funciones/stickers';
+import fight from './funciones/cmdFight';
+import getStickers from './funciones/cmdStickers';
+
+
+const comandos: {[id: string]:  (msg:WAWebJS.Message)=>void} = {
+	"!help" : (msg: WAWebJS.Message) => {
+			msg.reply(
+			`!ping -> si el bot esta funcionando responde con 'pong'\nFoto + '!sticker' -> envia un sticker creado con la foto`)
+		},
+	"!eval": (msg: WAWebJS.Message) => {
+		let response: string;
+		try{
+			response = evaluate(msg.body.slice(5)).toString();
+		}
+		catch {
+			response = "No pude resolverlo:( perdoname la vida:c";
+		}
+		msg.reply(response);
+	},
+	"!sticker": async (msg: WAWebJS.Message) => {
+		const chat: WAWebJS.Chat = await msg.getChat()
+		getStickers(msg, chat);
+	},
+	//"/kill": this["/kill"],
+	"!kill": async(msg: WAWebJS.Message) => {
+		const chat: WAWebJS.Chat = await msg.getChat()
+		const user: WAWebJS.Contact = await msg.getContact()		
+		const noFightDeathMessages: string[] = deathMessages.deathMessages;
+		const mentions: WAWebJS.Contact[] = await msg.getMentions();
+		let args: string[] = msg.body.toLowerCase().split(" ")
+		let mencionoAAlguien: boolean = (args.length>1) ? mentions.length > 0 : false;
+
+		if(!mencionoAAlguien)
+			chat.sendMessage(noFightDeathMessages[Math.floor(Math.random()*noFightDeathMessages.length)]
+				.replace(/%1\$s/g, `@${user.id.user}`), {
+				mentions: [user]
+			})
+		else {
+			const mention:WAWebJS.Contact = mentions[0];
+			chat.sendMessage(noFightDeathMessages[Math.floor(Math.random()*noFightDeathMessages.length)]
+				.replace(/%1\$s/g, `@${mention.id.user}`), 
+				{mentions: [mention]}
+			)
+
+		}
+	},
+	//"/fight":
+	//"!dueloamuerteconcuchillos":
+	"!fight": fight.fight
+};
+
 
 export default (client: Client) => {
 	return async (msg: WAWebJS.Message) => {
-		const user: WAWebJS.Contact = await msg.getContact()
-		const texto: string = msg.body.toLowerCase()
-		const chat: WAWebJS.Chat = await msg.getChat()
+		const texto: string = msg.body.toLowerCase();
 	
 		// Usa msg
 		if(texto == 'a') {
 			msg.reply('a')
 		}
-	
+
 		// Usa msg
-		if(texto.startsWith('!help')) {
-			msg.reply(
-				`!ping -> si el bot esta funcionando responde con 'pong'
-	Foto + '!sticker' -> envia un sticker creado con la foto`)
-		}
-	
-		// Usa msg, user y chat
-		if(texto.startsWith('!kill') || texto.startsWith('/kill')) {
-			const noFightDeathMessages: string[] = deathMessages.deathMessages;
-			const mentions: WAWebJS.Contact[] = await msg.getMentions();
-			let args: string[] = texto.split(" ")
-			let mencionoAAlguien: boolean = (args.length>1) ? mentions.length > 0 : false;
-	
-			if(!mencionoAAlguien)
-				chat.sendMessage(noFightDeathMessages[Math.floor(Math.random()*noFightDeathMessages.length)]
-					.replace(/%1\$s/g, `@${user.id.user}`), {
-					mentions: [user]
-				})
-			else {
-				const mention:WAWebJS.Contact = mentions[0];
-				chat.sendMessage(noFightDeathMessages[Math.floor(Math.random()*noFightDeathMessages.length)]
-					.replace(/%1\$s/g, `@${mention.id.user}`), 
-					{mentions: [mention]}
-				)
-	
-			}
-		}
-	
-		if(fight.wantsToFight(texto)) fight.fight(texto, msg, chat, user)
-	
-		// Usa msg y chat
-		if(texto.includes('!sticker')||texto.includes('!stiker'))
-			getStickers(msg, chat);
-	
-		if(texto.startsWith('!eval')) {
-			let response: string;
-			try{
-				response = evaluate(msg.body.slice(5)).toString();
-			}
-			catch {
-				response = "No pude resolverlo:( perdoname la vida:c";
-			}
-			msg.reply(response);
-		}
-	
-		// Usa msg
-		if(texto.includes('linux') ) {
-			msg.reply("I use Arch btw");
-		}
-	
-		// Usa msg
-		
 		let matchesPing:RegExpMatchArray|null = texto.match(/!ping/g);
 		let matchesPong:RegExpMatchArray|null = texto.match(/!pong/g);
 		if(matchesPing && matchesPong) {
@@ -103,7 +98,8 @@ export default (client: Client) => {
 				}
 			}
 		}
-	
+
+		// Usa msg y client
 		if(texto.includes('https://chat.whatsapp.com/')){
 			let inviteCode = msg.links[0]; 
 			try {
@@ -114,8 +110,17 @@ export default (client: Client) => {
 				msg.reply('That invite code seems to be invalid.'); 
 			}
 		}
+		
+		if(texto[0] == '!' || texto[0] == '/') {
+			let comando: string = texto.split(' ')[0];
+			try{
+				comandos[comando](msg);
+			} catch {
+				console.log("Comando desconocido: ", comando);
+			}
+		}
 	
-	
+		const user: WAWebJS.Contact = await msg.getContact();
 		console.log(user.name || user.pushname, ": ", msg.body);
 	}
 }
