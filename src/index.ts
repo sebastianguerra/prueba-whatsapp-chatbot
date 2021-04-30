@@ -17,7 +17,7 @@ if(fs.existsSync(SESSION_FILE_PATH)){
 // Use the saved values
 const client: WAWebJS.Client = new Client({
 	session: sessionData,
-	puppeteer: '/usr/bin/google-chrome-stable'
+	puppeteer: (process.platform == 'linux')? '/usr/bin/google-chrome-stable': (process.platform == 'darwin')? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome':'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
 });
 
 
