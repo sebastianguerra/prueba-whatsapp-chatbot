@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc",
-    "run": "tsc && node dist/index.js",
-    "clearAll": "rm -rf dist/ node_modules/ package-lock.json ",
+    "dev": "tsc && node dist/index.js",
+    "clearAll": "rm -rf dist/ node_modules/ ",
     "getSession": "node dist/getSession.js"
   },
   "author": "",
