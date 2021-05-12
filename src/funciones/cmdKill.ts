@@ -1,7 +1,8 @@
 import WAWebJS from 'whatsapp-web.js';
 import deathMessages from '../public/deathMessages.json';
 
-export default async(msg: WAWebJS.Message) => {
+export default async(msg: WAWebJS.Message, id: number): Promise<void> => {
+    console.time(`${id} cmdKill`)
     const chat: WAWebJS.Chat = await msg.getChat()
     const user: WAWebJS.Contact = await msg.getContact()		
     const noFightDeathMessages: string[] = deathMessages.deathMessages;
@@ -22,4 +23,5 @@ export default async(msg: WAWebJS.Message) => {
         )
 
     }
+    console.timeEnd(`${id} cmdKill`)
 }

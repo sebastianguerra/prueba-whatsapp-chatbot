@@ -14,16 +14,20 @@ if(fs.existsSync(SESSION_FILE_PATH)){
 	process.exit();
 }
 
+const puppeteerRoute: string = (process.platform == 'linux')? '/usr/bin/google-chrome-stable': (process.platform == 'darwin')? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome':'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe';
+console.log(puppeteerRoute);
 // Use the saved values
 const client: WAWebJS.Client = new Client({
 	session: sessionData,
-	puppeteer: (process.platform == 'linux')? '/usr/bin/google-chrome-stable': (process.platform == 'darwin')? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome':'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
+	puppeteer: { 'headless': "headless", executablePath: puppeteerRoute}
 });
 
 
 
-client.on('ready', () => {
+client.on('ready', async () => {
 	console.log('Client is ready!');
+	let wwebversion = await client.getWWebVersion();
+	console.log("Whatsapp Web Veresion: ", wwebversion);
 });
 
 
